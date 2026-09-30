@@ -180,20 +180,69 @@
     }
   });
 
-  /* ---------- Music ---------- */
-  const bgm = $("bgm");
+  /* ---------- Music (YouTube) ---------- */
   const muteBtn = $("muteBtn");
-  if (CONFIG.music) bgm.src = CONFIG.music;
+  const videoId = CONFIG.music || "";
+  let player = null;
+  let wantPlay = false;
+
+  function setMuted(on) {
+    muteBtn.classList.toggle("is-muted", on);
+    muteBtn.setAttribute("aria-pressed", on ? "true" : "false");
+  }
+
+  function startMusic() {
+    if (!videoId) return;
+    wantPlay = true;
+    muteBtn.hidden = false;
+    setMuted(false);
+    if (player && player.playVideo) {
+      player.unMute();
+      player.playVideo();
+    }
+  }
+
+  if (videoId) {
+    window.onYouTubeIframeAPIReady = () => {
+      player = new YT.Player("yt", {
+        videoId,
+        width: "200",
+        height: "200",
+        playerVars: {
+          autoplay: 0,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          loop: 1,
+          playlist: videoId,
+          modestbranding: 1,
+          playsinline: 1,
+          rel: 0
+        },
+        events: {
+          onReady: () => {
+            if (wantPlay) {
+              player.unMute();
+              player.playVideo();
+            }
+          }
+        }
+      });
+    };
+    const ytScript = document.createElement("script");
+    ytScript.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(ytScript);
+  }
 
   muteBtn.addEventListener("click", () => {
-    if (bgm.paused) {
-      bgm.play().catch(() => {});
-      muteBtn.classList.remove("is-muted");
-      muteBtn.setAttribute("aria-pressed", "false");
+    if (!player || !player.getPlayerState) return;
+    const playing = player.getPlayerState() === YT.PlayerState.PLAYING;
+    if (playing) {
+      wantPlay = false;
+      player.pauseVideo();
+      setMuted(true);
     } else {
-      bgm.pause();
-      muteBtn.classList.add("is-muted");
-      muteBtn.setAttribute("aria-pressed", "true");
+      startMusic();
     }
   });
 
@@ -229,10 +278,7 @@
     opened = true;
     intro.classList.add("opening");
     document.body.classList.remove("locked");
-    if (CONFIG.music) {
-      bgm.play().catch(() => {});
-      muteBtn.hidden = false;
-    }
+    startMusic();
     scrollBtn.hidden = false;
     setAuto(!reduceMotion);
     const fade = reduceMotion ? 250 : 1100;

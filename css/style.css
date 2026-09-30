@@ -147,6 +147,14 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   place-items: center;
   font-size: 1.15rem;
 }
+#yt {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  inset: 0 auto auto 0;
+  opacity: 0;
+  pointer-events: none;
+}
 .mute-btn { inset-inline-start: 14px; }
 .scroll-btn { inset-inline-end: 14px; }
 .mute-btn.is-muted { opacity: 0.45; }

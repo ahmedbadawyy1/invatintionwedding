@@ -7,7 +7,7 @@ const CONFIG = {
   durationHours: 4,
   mapsUrl: "https://maps.app.goo.gl/ViYL5JB8U7FouXW1A",
   rsvpEndpoint: "/api/rsvp",
-  music: "assets/music.mp3",
+  music: "LwL24fGL_YY",
   calendarFile: "ahmed-toka.ics",
 
   i18n: {
