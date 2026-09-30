@@ -38,17 +38,31 @@
     p { margin: 10px 0 0; line-height: 1.6; }
     time { display: block; margin-top: 8px; color: var(--muted); font-size: 0.9rem; }
     .empty, .error { text-align: center; padding: 40px 0; }
+    form { display: flex; gap: 8px; justify-content: center; margin-top: 28px; }
+    input, button {
+      font: inherit;
+      border-radius: 999px;
+      padding: 8px 16px;
+    }
+    input { border: 1px solid var(--gold); background: #fffdf8; color: var(--navy); min-width: 180px; }
+    button { border: 0; background: var(--navy); color: var(--cream); cursor: pointer; }
   </style>
 </head>
 <body>
   <main>
     <h1>تأكيدات الحضور</h1>
     <p class="summary" id="summary">جاري التحميل…</p>
+    <form id="gate" hidden>
+      <input id="key" type="password" placeholder="كلمة المرور" autocomplete="current-password" />
+      <button type="submit">دخول</button>
+    </form>
     <div id="list"></div>
   </main>
   <script>
     const list = document.getElementById("list");
     const summary = document.getElementById("summary");
+    const gate = document.getElementById("gate");
+    const keyInput = document.getElementById("key");
 
     function text(value) {
       return String(value || "").replace(/[&<>"']/g, (char) => ({
@@ -66,33 +80,68 @@
       return date.toLocaleString("ar-EG");
     }
 
-    fetch("/api/rsvps")
-      .then((response) => {
+    function show(data) {
+      gate.hidden = true;
+      const replies = data.replies || [];
+      const yes = replies.filter((item) => item.attending === "yes").length;
+      summary.textContent = replies.length
+        ? replies.length + " رد · " + yes + " سيحضر · " + (replies.length - yes) + " لن يحضر"
+        : "لا توجد ردود بعد.";
+      list.innerHTML = replies.slice().reverse().map((item) => {
+        const coming = item.attending === "yes";
+        return `<article>
+          <div class="row">
+            <strong>${text(item.name)}</strong>
+            <span class="${coming ? "yes" : "no"}">${coming ? "نعم، سيحضر" : "لا"}</span>
+          </div>
+          ${item.message ? `<p>${text(item.message)}</p>` : ""}
+          <time>${text(when(item.submittedAt))}</time>
+        </article>`;
+      }).join("");
+    }
+
+    function ask(wrong) {
+      summary.textContent = wrong ? "كلمة المرور غير صحيحة." : "اكتبوا كلمة المرور لعرض الأسماء.";
+      gate.hidden = false;
+      list.innerHTML = "";
+      keyInput.focus();
+    }
+
+    function load(key) {
+      const headers = {};
+      if (key) headers["X-Guest-Key"] = key;
+      return fetch("/api/rsvps", { headers }).then((response) => {
+        if (response.status === 403) {
+          const error = new Error("locked");
+          error.locked = true;
+          throw error;
+        }
         if (!response.ok) throw new Error("unavailable");
         return response.json();
-      })
-      .then((data) => {
-        const replies = data.replies || [];
-        const yes = replies.filter((item) => item.attending === "yes").length;
-        summary.textContent = replies.length
-          ? replies.length + " رد · " + yes + " سيحضر · " + (replies.length - yes) + " لن يحضر"
-          : "لا توجد ردود بعد.";
-        list.innerHTML = replies.slice().reverse().map((item) => {
-          const coming = item.attending === "yes";
-          return `<article>
-            <div class="row">
-              <strong>${text(item.name)}</strong>
-              <span class="${coming ? "yes" : "no"}">${coming ? "نعم، سيحضر" : "لا"}</span>
-            </div>
-            ${item.message ? `<p>${text(item.message)}</p>` : ""}
-            <time>${text(when(item.submittedAt))}</time>
-          </article>`;
-        }).join("");
-      })
-      .catch(() => {
-        summary.textContent = "";
-        list.innerHTML = '<p class="error">افتح هذه الصفحة من نفس الكمبيوتر عبر python3 server.py</p>';
       });
+    }
+
+    function openList(key, wrong) {
+      load(key)
+        .then((data) => {
+          if (key) sessionStorage.setItem("guestKey", key);
+          show(data);
+        })
+        .catch((error) => {
+          if (error.locked) ask(wrong);
+          else {
+            summary.textContent = "";
+            list.innerHTML = '<p class="error">تعذر تحميل الردود.</p>';
+          }
+        });
+    }
+
+    gate.addEventListener("submit", (event) => {
+      event.preventDefault();
+      openList(keyInput.value, true);
+    });
+
+    openList(sessionStorage.getItem("guestKey") || "", false);
   </script>
 </body>
 </html>

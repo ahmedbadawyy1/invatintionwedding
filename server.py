@@ -10,6 +10,7 @@ Open http://127.0.0.1:4173/guests.html on this computer to read them.
 
 from datetime import datetime, timezone
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+import hmac
 import json
 import os
 from pathlib import Path
@@ -58,6 +59,19 @@ def is_local(handler):
     return loopback(handler.client_address[0])
 
 
+def can_view(handler):
+    if is_local(handler):
+        return True
+    expected = os.environ.get("RSVP_KEY", "")
+    supplied = handler.headers.get("X-Guest-Key", "")
+    if not expected or not supplied:
+        return False
+    try:
+        return hmac.compare_digest(supplied, expected)
+    except (TypeError, ValueError):
+        return False
+
+
 class InvitationHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
@@ -69,7 +83,7 @@ class InvitationHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         path = self.path.split("?", 1)[0]
         if path == "/api/rsvps":
-            if not is_local(self):
+            if not can_view(self):
                 self.send_json(403, {"ok": False, "error": "local-only"})
                 return
             self.send_json(200, {"ok": True, "replies": load_replies()})
