@@ -11,14 +11,15 @@ Open http://127.0.0.1:4173/guests.html on this computer to read them.
 from datetime import datetime, timezone
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
+import os
 from pathlib import Path
 from threading import Lock
 
 ROOT = Path(__file__).resolve().parent
 DATA_FILE = ROOT / "data" / "rsvps.json"
 LOCK = Lock()
-HOST = "0.0.0.0"
-PORT = 4173
+HOST = os.environ.get("HOST", "0.0.0.0")
+PORT = int(os.environ.get("PORT", "4173"))
 MAX_BODY = 8_000
 
 
@@ -45,9 +46,16 @@ def clean(value, limit):
     return text[:limit]
 
 
-def is_local(address):
-    host = address or ""
+def loopback(host):
+    host = host or ""
     return host in {"127.0.0.1", "::1"} or host.endswith("127.0.0.1")
+
+
+def is_local(handler):
+    forwarded = handler.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+    if forwarded:
+        return loopback(forwarded)
+    return loopback(handler.client_address[0])
 
 
 class InvitationHandler(SimpleHTTPRequestHandler):
@@ -61,7 +69,7 @@ class InvitationHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         path = self.path.split("?", 1)[0]
         if path == "/api/rsvps":
-            if not is_local(self.client_address[0]):
+            if not is_local(self):
                 self.send_json(403, {"ok": False, "error": "local-only"})
                 return
             self.send_json(200, {"ok": True, "replies": load_replies()})
