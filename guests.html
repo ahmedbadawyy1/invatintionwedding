@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>تأكيدات الحضور</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --navy: #071733; --cream: #f5ecdd; --gold: #c39532; --muted: #7b6f62; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--navy);
+      font-family: Amiri, serif;
+      padding: 32px 16px 64px;
+    }
+    main { width: min(760px, 100%); margin: 0 auto; }
+    h1 { font-weight: 700; font-size: 2rem; margin: 0 0 8px; }
+    .summary { color: var(--muted); margin: 0 0 24px; }
+    article {
+      background: #fffdf8;
+      border: 1px solid rgba(195, 149, 50, 0.45);
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin: 0 0 12px;
+    }
+    .row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+    strong { font-size: 1.35rem; }
+    .yes, .no {
+      border-radius: 999px;
+      padding: 2px 12px;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+    .yes { background: var(--gold); color: #fffdf8; }
+    .no { border: 1px solid var(--gold); color: var(--navy); }
+    p { margin: 10px 0 0; line-height: 1.6; }
+    time { display: block; margin-top: 8px; color: var(--muted); font-size: 0.9rem; }
+    .empty, .error { text-align: center; padding: 40px 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>تأكيدات الحضور</h1>
+    <p class="summary" id="summary">جاري التحميل…</p>
+    <div id="list"></div>
+  </main>
+  <script>
+    const list = document.getElementById("list");
+    const summary = document.getElementById("summary");
+
+    function text(value) {
+      return String(value || "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[char]));
+    }
+
+    function when(iso) {
+      const date = new Date(iso);
+      if (Number.isNaN(date.getTime())) return "";
+      return date.toLocaleString("ar-EG");
+    }
+
+    fetch("/api/rsvps")
+      .then((response) => {
+        if (!response.ok) throw new Error("unavailable");
+        return response.json();
+      })
+      .then((data) => {
+        const replies = data.replies || [];
+        const yes = replies.filter((item) => item.attending === "yes").length;
+        summary.textContent = replies.length
+          ? replies.length + " رد · " + yes + " سيحضر · " + (replies.length - yes) + " لن يحضر"
+          : "لا توجد ردود بعد.";
+        list.innerHTML = replies.slice().reverse().map((item) => {
+          const coming = item.attending === "yes";
+          return `<article>
+            <div class="row">
+              <strong>${text(item.name)}</strong>
+              <span class="${coming ? "yes" : "no"}">${coming ? "نعم، سيحضر" : "لا"}</span>
+            </div>
+            ${item.message ? `<p>${text(item.message)}</p>` : ""}
+            <time>${text(when(item.submittedAt))}</time>
+          </article>`;
+        }).join("");
+      })
+      .catch(() => {
+        summary.textContent = "";
+        list.innerHTML = '<p class="error">افتح هذه الصفحة من نفس الكمبيوتر عبر python3 server.py</p>';
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="google" content="notranslate" />
+  <title>فرح أحمد وتقي | Ahmed &amp; Toka</title>
+  <meta name="description" content="يسعدنا دعوتكم لحضور فرح أحمد وتقي — ١٥ أكتوبر ٢٠٢٦، القاعة الماسية بدار المشاة، من ٨ مساءً حتى ١٢. Ahmed &amp; Toka, 15 October 2026, 8 PM–midnight." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ar_AR" />
+  <meta property="og:locale:alternate" content="en_US" />
+  <meta property="og:title" content="فرح أحمد وتقي | Ahmed &amp; Toka" />
+  <meta property="og:description" content="Ahmed &amp; Toka — 15 October 2026, The Diamond Hall, Dar Al-Mashah, 8 PM–midnight." />
+  <meta property="og:image" content="assets/og.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Ahmed &amp; Toka" />
+  <meta name="twitter:description" content="Ahmed &amp; Toka — 15 October 2026, The Diamond Hall, Dar Al-Mashah, 8 PM–midnight." />
+  <meta name="twitter:image" content="assets/og.jpg" />
+  <meta name="theme-color" content="#071733" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23071733'/%3E%3Cpath d='M16 7c1 3 3 4.2 6 5-3 .8-5 2-6 5-1-3-3-4.2-6-5 3-.8 5-2 6-5z' fill='%23c39532'/%3E%3C/svg%3E" />
+  <link rel="preload" as="image" href="assets/cover.jpg" />
+  <link rel="preload" as="image" href="assets/hero.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="locked">
+  <a class="skip-link" href="#content" data-i18n="skip"></a>
+
+  <div id="intro" class="intro" role="dialog" aria-modal="true" aria-labelledby="openBtn">
+    <button id="openBtn" class="open-hit" type="button" data-i18n-aria="openAria">
+      <img class="cover" src="assets/cover.jpg" width="720" height="1280" alt="" decoding="sync" />
+      <span class="tap" data-i18n="tap"></span>
+    </button>
+  </div>
+
+  <button id="langBtn" class="float-btn lang-btn" type="button" data-i18n-aria="langAria">EN</button>
+  <button id="muteBtn" class="dock-btn mute-btn" type="button" data-i18n-aria="muteAria" hidden aria-pressed="false">
+    <span aria-hidden="true">♪</span>
+  </button>
+  <button id="scrollBtn" class="dock-btn scroll-btn" type="button" data-i18n-aria="scrollAria" hidden aria-pressed="true">
+    <span class="scroll-icon" aria-hidden="true"></span>
+  </button>
+  <audio id="bgm" loop preload="none"></audio>
+
+  <main id="content">
+    <section class="hero reveal" aria-labelledby="hero-names">
+      <div class="hero-shade"></div>
+      <div class="hero-copy" id="hero-names">
+        <p class="couple-hero script" data-i18n="coupleLine"></p>
+        <p class="wedding-of" data-i18n="weddingOf"></p>
+        <p class="hero-date" data-i18n="dateNumeric"></p>
+      </div>
+    </section>
+
+    <section class="panel navy reveal" aria-labelledby="story-title">
+      <p class="kicker" data-i18n="storyKicker"></p>
+      <div class="ornament" aria-hidden="true"><span></span></div>
+      <h2 id="story-title" class="script title" data-i18n="storyTitle"></h2>
+      <p class="lead" data-i18n="storyLead"></p>
+      <p class="prose" data-i18n="storyBody"></p>
+      <div class="ornament" aria-hidden="true"><span></span></div>
+    </section>
+
+    <section class="panel cream reveal" aria-labelledby="date-kicker">
+      <p id="date-kicker" class="kicker ink" data-i18n="dateKicker"></p>
+      <div class="ornament gold" aria-hidden="true"><span></span></div>
+      <p class="day script" data-i18n="dayNum"></p>
+      <p class="month" data-i18n="monthName"></p>
+      <div class="plus" aria-hidden="true"><span></span><b>+</b><span></span></div>
+      <p class="year" data-i18n="yearNum"></p>
+      <p class="note" data-i18n="dateNote"></p>
+      <button id="calBtn" class="text-btn" type="button" data-i18n="addCal" data-i18n-aria="calAria"></button>
+    </section>
+
+    <section class="panel navy reveal" aria-labelledby="count-word">
+      <p class="kicker" data-i18n="countKicker"></p>
+      <div class="ornament" aria-hidden="true"><span></span></div>
+      <p class="until" data-i18n="countLead"></p>
+      <h2 id="count-word" class="script title" data-i18n="countWord"></h2>
+      <div id="countdown" class="countdown" aria-live="off"></div>
+      <p class="note light" data-i18n="countNote"></p>
+      <div class="ornament" aria-hidden="true"><span></span></div>
+    </section>
+
+    <section class="panel cream reveal" aria-labelledby="time-kicker">
+      <p id="time-kicker" class="kicker ink" data-i18n="timeKicker"></p>
+      <div class="ornament gold" aria-hidden="true"><span></span></div>
+      <ol id="timeline" class="timeline"></ol>
+      <p class="note" data-i18n="timeNote"></p>
+    </section>
+
+    <section class="panel navy reveal" aria-labelledby="venue-name">
+      <p class="kicker" data-i18n="venueKicker"></p>
+      <div class="ornament" aria-hidden="true"><span></span></div>
+      <h2 id="venue-name" class="venue" data-i18n="venueName"></h2>
+      <p class="city" data-i18n="venueCity"></p>
+      <div class="plus light" aria-hidden="true"><span></span><b>✦</b><span></span></div>
+      <p class="note light" data-i18n="venueNote"></p>
+      <a id="mapBtn" class="ghost" target="_blank" rel="noopener noreferrer" data-i18n="map" data-i18n-aria="mapAria"></a>
+      <p class="note light" data-i18n="venueClose"></p>
+    </section>
+
+    <section class="panel cream reveal" aria-labelledby="rsvp-title">
+      <h2 id="rsvp-title" class="rsvp-title" data-i18n="rsvpTitle"></h2>
+      <div class="ornament gold" aria-hidden="true"><span></span></div>
+      <form id="rsvpForm" class="card" novalidate>
+        <label class="field">
+          <span data-i18n="name"></span>
+          <input name="name" type="text" autocomplete="name" required maxlength="80" data-i18n-ph="namePh" />
+        </label>
+        <fieldset class="field choices">
+          <legend data-i18n="attending"></legend>
+          <label class="choice">
+            <input type="radio" name="attending" value="yes" checked />
+            <span data-i18n="yes"></span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="attending" value="no" />
+            <span data-i18n="no"></span>
+          </label>
+        </fieldset>
+        <label class="field">
+          <span data-i18n="message"></span>
+          <textarea name="message" rows="3" maxlength="500" data-i18n-ph="messagePh"></textarea>
+        </label>
+        <button class="solid" type="submit" data-i18n="send"></button>
+        <p id="status" class="status" role="status"></p>
+      </form>
+    </section>
+
+    <section class="panel navy thanks reveal">
+      <div class="ornament" aria-hidden="true"><span></span></div>
+      <h2 class="script title" data-i18n="thanksKicker"></h2>
+      <p class="note light" data-i18n="thanksNote"></p>
+      <p class="heart" aria-hidden="true">♥</p>
+      <p class="couple script" data-i18n="coupleLine"></p>
+      <p class="thanks-date" data-i18n="thanksDate"></p>
+      <div class="ornament" aria-hidden="true"><span></span></div>
+    </section>
+  </main>
+
+  <script src="js/config.js?v=2"></script>
+  <script src="js/script.js?v=2"></script>
+</body>
+</html>

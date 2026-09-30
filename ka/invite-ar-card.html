@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>ندعوكم لحضور عقد قرآن — البشمهندس أحمد والدكتورة تقي</title>
+  <style>
+    @font-face {
+      font-family: "Scheherazade New";
+      src: url("fonts/ScheherazadeNew-Bold.ttf") format("truetype");
+      font-weight: 700;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Amiri";
+      src: url("fonts/Amiri-Bold.ttf") format("truetype");
+      font-weight: 700;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Amiri";
+      src: url("fonts/Amiri-Regular.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1000px;
+      height: 1400px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .card {
+      width: 1000px;
+      height: 1400px;
+      position: relative;
+      overflow: hidden;
+      background: #d7d2c8;
+    }
+
+    .card img.photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 58%;
+      display: block;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 40%;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 252, 248, 0.32) 0%,
+        rgba(255, 252, 248, 0.12) 55%,
+        rgba(255, 252, 248, 0) 100%
+      );
+      pointer-events: none;
+    }
+
+    .text {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      color: #6B1F2A;
+      padding: 52px 60px 0;
+      text-shadow: 0 1px 12px rgba(255, 252, 248, 0.4);
+    }
+
+    .invite {
+      font-family: "Scheherazade New", "Amiri", serif;
+      font-weight: 700;
+      font-size: 58px;
+      line-height: 1.1;
+    }
+
+    .ceremony {
+      font-family: "Scheherazade New", "Amiri", serif;
+      font-weight: 700;
+      font-size: 86px;
+      line-height: 1.05;
+      margin-top: 2px;
+    }
+
+    .names {
+      font-family: "Amiri", serif;
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 1.2;
+      margin-top: 18px;
+      white-space: nowrap;
+    }
+
+    .details {
+      font-family: "Amiri", serif;
+      font-weight: 700;
+      font-size: 40px;
+      line-height: 1.25;
+      margin-top: 22px;
+      white-space: nowrap;
+    }
+
+    .details .nums {
+      direction: ltr;
+      unicode-bidi: isolate;
+      display: inline-block;
+    }
+
+    .place {
+      font-family: "Amiri", serif;
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 1.3;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <article class="card">
+    <img class="photo" src="card-photo-kids-convertible.jpg" alt="" />
+    <div class="text">
+      <p class="invite">ندعوكم لحضور</p>
+      <p class="ceremony">عقد قرآن</p>
+      <p class="names">البشمهندس أحمد والدكتورة تقي</p>
+      <p class="details">يوم <span class="nums">٨ / ١٠ / ٢٠٢٦</span></p>
+      <p class="place">جامع الفردوس · بعد صلاة العصر</p>
+    </div>
+  </article>
+</body>
+</html>
